@@ -7,20 +7,20 @@ using System.Text;
 
 namespace MS.DbContexts.Mappings
 {
-    public class RouteDriverMap : IEntityTypeConfiguration<RouteDriver>
+    public class TravelDriverMap : IEntityTypeConfiguration<TravelDriver>
     {
-        public void Configure(EntityTypeBuilder<RouteDriver> builder)
+        public void Configure(EntityTypeBuilder<TravelDriver> builder)
         {
-            builder.ToTable("TblRouteDriver")
-                .HasKey(t => new { t.RouteId, t.DriverId });
+            builder.ToTable("TblTravelDriver")
+                .HasKey(t => new { t.TravelId, t.DriverId });
 
-            builder.HasOne(t => t.Route)
-                .WithMany(p => p.RouteDrivers)
-                .HasForeignKey(t => t.RouteId)
+            builder.HasOne(t => t.Travel)
+                .WithMany(p => p.TravelDrivers)
+                .HasForeignKey(t => t.TravelId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasOne(t => t.Driver)
-                .WithMany(p => p.RouteDrivers)
+                .WithMany(p => p.TravelDrivers)
                 .HasForeignKey(t => t.DriverId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 

@@ -87,7 +87,7 @@ namespace MS.Models.RequestModel
                     }
                     break;
                 case ExecuteType.Delete:
-                    if (unitOfWork.GetRepository<Route>().Exists(x => x.TruckId == Id))
+                    if (unitOfWork.GetRepository<Travel>().Exists(x => x.TruckId == Id))
                     {
                         result.SetFailMessage("当前车辆已产生过运输行程，无法删除");
                     }

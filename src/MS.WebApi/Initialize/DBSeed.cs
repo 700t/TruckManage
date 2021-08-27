@@ -116,28 +116,28 @@ namespace MS.WebApi
                     Creator = rootUserId,
                     CreateTime = DateTime.Now
                 };
-                Route route1 = new Route
+                Travel travel1 = new Travel
                 {
                     Id = 1219490056771866701,
                     Name = "达州-宣汉",
                     StartTime = DateTime.Parse("2021-08-16 08:00:00"),
                     StartAddress = "达州南城",
                     TargetAddress = "宣汉城区",
-                    RunStatus = RouteEnums.RunStatusEnum.NotYet,
+                    RunStatus = TravelEnums.RunStatusEnum.NotYet,
                     TruckId = 1219490056771866501,
                     //DriverIds = "1219490056771866627",
                     IsRound = true,
                     Creator = rootUserId,
                     Remark = "测试线路A"
                 };
-                Route route2 = new Route
+                Travel travel2 = new Travel
                 {
                     Id = 1219490056771866702,
                     Name = "达州-万源",
                     StartTime = DateTime.Parse("2021-08-17 08:20:00"),
                     StartAddress = "达州北外高家坝",
                     TargetAddress = "万源城口",
-                    RunStatus = RouteEnums.RunStatusEnum.NotYet,
+                    RunStatus = TravelEnums.RunStatusEnum.NotYet,
                     TruckId = 1219490056771866502,
                     //DriverIds = "1219490056771866627",
                     IsRound = true,
@@ -145,21 +145,21 @@ namespace MS.WebApi
                     Remark = "测试线路B"
                 };
 
-                RouteDriver routeDriver1 = new RouteDriver
+                TravelDriver travelDriver1 = new TravelDriver
                 {
-                    RouteId = 1219490056771866701,
+                    TravelId = 1219490056771866701,
                     DriverId = 1219490056771866627
                 };
-                RouteDriver routeDriver2 = new RouteDriver
+                TravelDriver travelDriver2 = new TravelDriver
                 {
-                    RouteId = 1219490056771866702,
+                    TravelId = 1219490056771866702,
                     DriverId = 1219490056771866628
                 };
 
                 unitOfWork.GetRepository<Truck>().Insert(truck1, truck2);
                 unitOfWork.GetRepository<Driver>().Insert(driver1, driver2);
-                unitOfWork.GetRepository<Route>().Insert(route1, route2);
-                unitOfWork.GetRepository<RouteDriver>().Insert(routeDriver1, routeDriver2);
+                unitOfWork.GetRepository<Travel>().Insert(travel1, travel2);
+                unitOfWork.GetRepository<TravelDriver>().Insert(travelDriver1, travelDriver2);
 
                 unitOfWork.SaveChanges();
                 #endregion

@@ -1,14 +1,14 @@
 ﻿using MS.Entities.Core;
 using System;
 using System.Collections.Generic;
-using static MS.Entities.Core.RouteEnums;
+using static MS.Entities.Core.TravelEnums;
 
 namespace MS.Entities
 {
     /// <summary>
     /// 行程路线
     /// </summary>
-    public class Route : BaseEntity
+    public class Travel : BaseEntity
     {
         /// <summary>
         /// 线路名称
@@ -55,6 +55,6 @@ namespace MS.Entities
         public string Remark { get; set; }
 
 
-        public virtual List<RouteDriver> RouteDrivers { get; set; }
+        public virtual List<TravelDriver> TravelDrivers { get; set; }
     }
 }

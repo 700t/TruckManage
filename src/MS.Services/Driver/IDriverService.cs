@@ -20,6 +20,6 @@ namespace MS.Services.Driver
         Task<ExecuteResult> Update(DriverRequest request);
         Task<ExecuteResult> Delete(DriverRequest request);
         Task<ExecuteResult> UpdateStatusAsync(long driverId, bool isEnabled);
-
+        Task<ExecuteResult<IList<DriverOptionsVM>>> DriverOptions();
     }
 }

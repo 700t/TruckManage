@@ -8,15 +8,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MS.Services.Car
+namespace MS.Services.Truck
 {
     public interface ITruckService : IBaseService
     {
         Task<ExecuteResult<TruckPageVM>> GetAsync(long truckId);
         Task<ExecuteResult<IPagedList<TruckPageVM>>> PageListAsync(TruckPageRequest request);
-        Task<ExecuteResult<Truck>> CreateAsync(TruckRequest request);
+        Task<ExecuteResult<MS.Entities.Truck>> CreateAsync(TruckRequest request);
         Task<ExecuteResult> UpdateAsync(TruckRequest request);
         Task<ExecuteResult> DeleteAsnyc(TruckRequest request);
         Task<ExecuteResult> UpdateStatusAsync(long truckId, bool isEnabled);
+        Task<ExecuteResult<IList<TruckOptionsVM>>> TruckOptions();
     }
 }

@@ -8,11 +8,11 @@ using System.Text;
 
 namespace MS.DbContexts.Mappings
 {
-    public class RouteMap : IEntityTypeConfiguration<Route>
+    public class TravelMap : IEntityTypeConfiguration<Travel>
     {
-        public void Configure(EntityTypeBuilder<Route> builder)
+        public void Configure(EntityTypeBuilder<Travel> builder)
         {
-            builder.ToTable("TblRoutes");
+            builder.ToTable("TblTravels");
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).ValueGeneratedNever();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(255);

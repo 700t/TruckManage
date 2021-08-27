@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using static MS.Entities.Core.RouteEnums;
+using static MS.Entities.Core.TravelEnums;
 
 namespace MS.Models.RequestModel
 {
-    public class RouteRequest
+    public class TravelRequest
     {
         public long? Id { get; set; }
 
@@ -58,10 +58,10 @@ namespace MS.Models.RequestModel
         public ExecuteResult CheckField(ExecuteType executeType, IUnitOfWork<MSDbContext> unitOfWork)
         {
             var result = new ExecuteResult();
-            var repo = unitOfWork.GetRepository<Route>();
+            var repo = unitOfWork.GetRepository<Travel>();
             if(executeType != ExecuteType.Create && !repo.Exists(x => x.Id == Id))
             {
-                return result.SetFailMessage("该线路不存在");
+                return result.SetFailMessage("该行程不存在");
             }
 
             switch (executeType)

@@ -3,11 +3,11 @@ using MS.Entities.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static MS.Entities.Core.RouteEnums;
+using static MS.Entities.Core.TravelEnums;
 
 namespace MS.Models.ViewModel
 {
-    public class RoutePageVM : BaseEntity
+    public class TravelPageVM : BaseEntity
     {
         public string Name { get; set; }
 
@@ -29,12 +29,17 @@ namespace MS.Models.ViewModel
         /// </summary>
         public long TruckId { get; set; }
 
+        public string PlateNumber { get; set; }
+
+        //驾驶员ID(多个)
+        public IList<long> DriverIds { get; set; }
+
+        public string DriverNames { get; set; }
+
         public bool IsRound { get; set; }
 
         public string Remark { get; set; }
 
-        public string PlateNumber { get; set; }
 
-        public string DriverNames { get; set; }
     }
 }

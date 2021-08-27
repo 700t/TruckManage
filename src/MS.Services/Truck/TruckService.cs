@@ -15,11 +15,12 @@ using MS.WebCore;
 using MS.WebCore.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static MS.Entities.Core.TruckEnums;
 
-namespace MS.Services.Car
+namespace MS.Services.Truck
 {
     public class TruckService : BaseService, ITruckService
     {
@@ -35,7 +36,7 @@ namespace MS.Services.Car
         public async Task<ExecuteResult<TruckPageVM>> GetAsync(long truckId)
         {
             var result = new ExecuteResult<TruckPageVM>();
-            var row = await _unitOfWork.GetRepository<Truck>().FindAsync(truckId);
+            var row = await _unitOfWork.GetRepository<MS.Entities.Truck>().FindAsync(truckId);
             if (row == null)
             {
                 return result.SetFailMessage($"ID为 {truckId} 的车辆不存在");
@@ -52,9 +53,9 @@ namespace MS.Services.Car
             return new ExecuteResult<IPagedList<TruckPageVM>>(list);
         }
 
-        public async Task<ExecuteResult<Truck>> CreateAsync(TruckRequest request)
+        public async Task<ExecuteResult<Entities.Truck>> CreateAsync(TruckRequest request)
         {
-            var result = new ExecuteResult<Truck>();
+            var result = new ExecuteResult<Entities.Truck>();
             if (request.CheckField(ExecuteType.Create, _unitOfWork) is ExecuteResult executeResult && !executeResult.IsSucceed)
             {
                 return result.SetFailMessage(executeResult.Message);
@@ -62,13 +63,13 @@ namespace MS.Services.Car
 
             using (var trans = _unitOfWork.BeginTransaction())
             {
-                var newRow = _mapper.Map<Truck>(request);
+                var newRow = _mapper.Map<Entities.Truck>(request);
                 newRow.Id = _idWorker.NextId();
                 newRow.Status = StatusCode.Enable;
                 newRow.IsUsed = false;
                 newRow.Creator = _claimsAccessor.UserId;
                 newRow.CreateTime = DateTime.Now;
-                await _unitOfWork.GetRepository<Truck>().InsertAsync(newRow);
+                await _unitOfWork.GetRepository<Entities.Truck>().InsertAsync(newRow);
                 await _unitOfWork.SaveChangesAsync();
 
                 await trans.CommitAsync();
@@ -85,12 +86,12 @@ namespace MS.Services.Car
                 return result.SetFailMessage(checkResult.Message);
             }
 
-            var row = await _unitOfWork.GetRepository<Truck>().FindAsync(request.Id);
+            var row = await _unitOfWork.GetRepository<Entities.Truck>().FindAsync(request.Id);
 
             _mapper.Map(request, row);
             row.Modifier = _claimsAccessor.UserId;
             row.ModifyTime = DateTime.Now;
-            _unitOfWork.GetRepository<Truck>().Update(row);
+            _unitOfWork.GetRepository<Entities.Truck>().Update(row);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
@@ -104,11 +105,11 @@ namespace MS.Services.Car
                 return result.SetFailMessage(checkResult.Message);
             }
 
-            var row = await _unitOfWork.GetRepository<Truck>().FindAsync(request.Id);
+            var row = await _unitOfWork.GetRepository<Entities.Truck>().FindAsync(request.Id);
             row.Status = StatusCode.Deleted;
             row.Modifier = _claimsAccessor.UserId;
             row.ModifyTime = DateTime.Now;
-            _unitOfWork.GetRepository<Truck>().Update(row);
+            _unitOfWork.GetRepository<Entities.Truck>().Update(row);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
@@ -117,18 +118,29 @@ namespace MS.Services.Car
         public async Task<ExecuteResult> UpdateStatusAsync(long truckId, bool isEnabled)
         {
             var result = new ExecuteResult();
-            if (truckId == 0 || !_unitOfWork.GetRepository<Truck>().Exists(x => x.Id == truckId))
+            if (truckId == 0 || !_unitOfWork.GetRepository<Entities.Truck>().Exists(x => x.Id == truckId))
             {
                 return result.SetFailMessage("无效的车辆ID");
             }
-            var row = await _unitOfWork.GetRepository<Truck>().FindAsync(truckId);
+            var row = await _unitOfWork.GetRepository<Entities.Truck>().FindAsync(truckId);
             row.Status = isEnabled ? StatusCode.Enable : StatusCode.Disable;
             row.Modifier = _claimsAccessor.UserId;
             row.ModifyTime = DateTime.Now;
-            _unitOfWork.GetRepository<Truck>().Update(row);
+            _unitOfWork.GetRepository<Entities.Truck>().Update(row);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
+        }
+
+        public async Task<ExecuteResult<IList<TruckOptionsVM>>> TruckOptions()
+        {
+            var result = new ExecuteResult<IList<TruckOptionsVM>>();
+
+            Expression<Func<Entities.Truck, bool>> where = x => x.Status != StatusCode.Deleted;
+            IList<Entities.Truck> trucks = await _unitOfWork.GetRepository<Entities.Truck>().GetAllAsync(predicate: where);
+
+            var truckVms = _mapper.Map<IList<TruckOptionsVM>>(trucks);
+            return result.SetData(truckVms);
         }
 
     }

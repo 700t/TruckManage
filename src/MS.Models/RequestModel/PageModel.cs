@@ -26,10 +26,10 @@ namespace MS.Models.RequestModel
         [Display(Name ="排序字段")]
         public string OrderField { get; set; }
 
-        //public PageModel()
-        //{
-        //    Page = 1;
-        //    Limit = 10;
-        //}
+        public PageModel()
+        {
+            Page = 1;
+            Limit = 10;
+        }
     }
 }

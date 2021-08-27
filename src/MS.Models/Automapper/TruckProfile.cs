@@ -14,6 +14,8 @@ namespace MS.Models.Automapper
         {
             CreateMap<TruckRequest, Truck>();
             CreateMap<Truck, TruckPageVM>();
+            CreateMap<Truck, TruckOptionsVM>()
+                .ForMember(t => t.Disabled, opt => opt.MapFrom(src => src.Status != Entities.Core.StatusCode.Enable));
         }
     }
 }

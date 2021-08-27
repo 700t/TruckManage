@@ -43,6 +43,6 @@ namespace MS.Entities
 
         public string Remark { get; set; }
 
-        public virtual List<RouteDriver> RouteDrivers { get; set; }
+        public virtual List<TravelDriver> TravelDrivers { get; set; }
     }
 }

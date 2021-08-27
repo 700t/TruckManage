@@ -31,8 +31,8 @@ namespace MS.DbContexts
 
             modelBuilder.ApplyConfiguration(new TruckMap());
             modelBuilder.ApplyConfiguration(new DriverMap());
-            modelBuilder.ApplyConfiguration(new RouteMap());
-            modelBuilder.ApplyConfiguration(new RouteDriverMap());
+            modelBuilder.ApplyConfiguration(new TravelMap());
+            modelBuilder.ApplyConfiguration(new TravelDriverMap());
 
             base.OnModelCreating(modelBuilder);
         }

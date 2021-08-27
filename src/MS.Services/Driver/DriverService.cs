@@ -14,6 +14,7 @@ using MS.WebCore;
 using MS.WebCore.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -128,6 +129,17 @@ namespace MS.Services.Driver
             await _unitOfWork.SaveChangesAsync();
 
             return result;
+        }
+
+        public async Task<ExecuteResult<IList<DriverOptionsVM>>> DriverOptions()
+        {
+            var result = new ExecuteResult<IList<DriverOptionsVM>>();
+
+            Expression<Func<Entities.Driver, bool>> where = x => x.Status != StatusCode.Deleted;
+            IList<Entities.Driver> drivers = await _unitOfWork.GetRepository<Entities.Driver>().GetAllAsync(predicate: where);
+
+            var driverVms = _mapper.Map<IList<DriverOptionsVM>>(drivers);
+            return result.SetData(driverVms);
         }
 
     }

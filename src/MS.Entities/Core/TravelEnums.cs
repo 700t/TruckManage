@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MS.Entities.Core
 {
-    public class RouteEnums
+    public class TravelEnums
     {
         public enum RunStatusEnum
         {

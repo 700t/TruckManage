@@ -19,6 +19,8 @@ namespace MS.Models.Automapper
                 .ForMember(t => t.Age, opt => opt.MapFrom(src => CalculateAge(src.IdNumber)));
 
             CreateMap<DriverRequest, Driver>();
+            CreateMap<Driver, DriverOptionsVM>()
+                .ForMember(t => t.Disabled, opt => opt.MapFrom(src => src.Status != Entities.Core.StatusCode.Enable));
         }
 
         private int CalculateAge(string idNumber)

@@ -12,46 +12,60 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using static MS.Entities.Core.RouteEnums;
+using static MS.Entities.Core.TravelEnums;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace MS.Models.RequestModel
 {
-    public class RoutePageRequest : PageModel
+    public class TravelPageRequest : PageModel
     {
+        [Display(Name = "行程名称")]
         public string Name { get; set; }
 
+
+        [Display(Name = "出发时间")]
         public DateTime? StartTime { get; set; }
 
+
+        [Display(Name = "结束时间")]
         public DateTime? EndTime { get; set; }
 
         /// <summary>
         /// 行程状态：0未出发，1行驶中，2已完成
         /// </summary>
+        [Display(Name = "行程状态")]
         public RunStatusEnum? RunStatus { get; set; }
 
+
+        [Display(Name = "出发地")]
         public string StartAddress { get; set; }
 
+
+        [Display(Name = "目的地")]
         public string TargetAddress { get; set; }
 
-        /// <summary>
-        /// 驾驶员姓名
-        /// </summary>
+
+        [Display(Name = "驾驶员姓名")]
         public string DriverName { get; set; }
 
-        /// <summary>
-        /// 是否往返
-        /// </summary>
+
+        [Display(Name = "是否往返")]
         public bool? IsRound { get; set; }
 
-        public async Task<IPagedList<RoutePageVM>> PageListAsync(IUnitOfWork<MSDbContext> unitOfWork, IMapper mapper)
+
+        [Display(Name = "状态")]
+        public StatusCode? Status { get; set; }
+
+
+        public async Task<IPagedList<TravelPageVM>> PageListAsync(IUnitOfWork<MSDbContext> unitOfWork, IMapper mapper)
         {
-            Expression<Func<Route, bool>> where = x => true;
+            Expression<Func<Travel, bool>> where = x => true;
             where = where.And(x => x.Status != StatusCode.Deleted);
 
             if (!string.IsNullOrEmpty(Key))
             {
-                where = where.And(x => x.Name.Contains(Key) || x.StartAddress.Contains(Key) || x.TargetAddress.Contains(Key) || x.Truck.PlateNumber.Contains(Key) || x.RouteDrivers.Exists(r => r.Driver.Name.Contains(Key)));
+                where = where.And(x => x.Name.Contains(Key) || x.StartAddress.Contains(Key) || x.TargetAddress.Contains(Key) || x.Truck.PlateNumber.Contains(Key) || x.TravelDrivers.Exists(r => r.Driver.Name.Contains(Key)));
             }
             else
             {
@@ -77,25 +91,29 @@ namespace MS.Models.RequestModel
                 }
                 if (!string.IsNullOrEmpty(DriverName))
                 {
-                    where = where.And(x => x.RouteDrivers.Exists(r => r.Driver.Name.Contains(DriverName)));
+                    where = where.And(x => x.TravelDrivers.Exists(r => r.Driver.Name.Contains(DriverName)));
                 }
                 if(IsRound != null)
                 {
                     where = where.And(x => x.IsRound == IsRound);
                 }
+                if(Status != null)
+                {
+                    where = where.And(x => x.Status == Status);
+                }
             }
-            Func<IQueryable<Route>, IOrderedQueryable<Route>> orderBy = x => x.OrderByDescending(r => r.Id);
+            Func<IQueryable<Travel>, IOrderedQueryable<Travel>> orderBy = x => x.OrderByDescending(r => r.Id);
             if(!string.IsNullOrEmpty(Order) && !string.IsNullOrEmpty(OrderField))
             {
-                orderBy = x => (IOrderedQueryable<Route>)x.OrderBy(OrderField, Order == "descending");
+                orderBy = x => (IOrderedQueryable<Travel>)x.OrderBy(OrderField, Order == "descending");
             }
-            //IPagedList<Route> pagedList = await unitOfWork.GetRepository<Route>().GetPagedListAsync(predicate: where, orderBy: orderBy, pageIndex: Page, pageSize: Limit);
-            IPagedList<Route> pagedList = await unitOfWork.GetRepository<Route>().GetPagedListAsync(predicate: where, orderBy: orderBy, include: source=>source
+            //IPagedList<Travel> pagedList = await unitOfWork.GetRepository<Travel>().GetPagedListAsync(predicate: where, orderBy: orderBy, pageIndex: Page, pageSize: Limit);
+            IPagedList<Travel> pagedList = await unitOfWork.GetRepository<Travel>().GetPagedListAsync(predicate: where, orderBy: orderBy, include: source=>source
             .Include(c=>c.Truck)
-            .Include(c=>c.RouteDrivers)
+            .Include(c=>c.TravelDrivers)
             .ThenInclude(rd=>rd.Driver), pageIndex: Page, pageSize: Limit);
 
-            var list = mapper.Map<PagedList<RoutePageVM>>(pagedList);
+            var list = mapper.Map<PagedList<TravelPageVM>>(pagedList);
 
             return list;
         }
